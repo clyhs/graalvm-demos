@@ -115,32 +115,36 @@
 					<redeploy>true</redeploy>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.graalvm.nativeimage</groupId>
-				<artifactId>native-image-maven-plugin</artifactId>
-				<version>19.3.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>native-image</goal>
-						</goals>
-						<phase>package</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<imageName>${project.artifactId}-full</imageName>
-					<mainClass>com.abvert.web.VertxHttpServer</mainClass>
-					<buildArgs>--no-server --allow-incomplete-classpath --no-fallback</buildArgs>
-				</configuration>
-			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
-				<version>3.1.1</version> <executions> <execution> <phase>package</phase> 
-				<goals> <goal>shade</goal> </goals> <configuration> <transformers> <transformer 
-				implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> 
-				<mainClass>com.abvert.web.VertxHttpServer</mainClass> </transformer> </transformers> 
-				</configuration> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>native</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.graalvm.nativeimage</groupId>
+						<artifactId>native-image-maven-plugin</artifactId>
+						<version>19.3.0</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>native-image</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+						</executions>
+						<configuration>
+							<imageName>${project.artifactId}-full</imageName>
+							<mainClass>com.abvert.web.VertxHttpServer</mainClass>
+							<buildArgs>--no-server --allow-incomplete-classpath --no-fallback</buildArgs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 
 

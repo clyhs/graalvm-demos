@@ -1,8 +1,11 @@
-native-image --verbose --no-server --no-fallback --allow-incomplete-classpath --initialize-at-run-time=io.netty.handler.ssl.util.ThreadLocalInsecureRandom --initialize-at-build-time=ch.qos.logback.classic.Logger -Dio.netty.noUnsafe=true -H:Name=vertx-graalvm -H:ReflectionConfigurationFiles=./reflectconfigs/netty.json --delay-class-initialization-to-runtime=io.netty.handler.codec.http.HttpObjectEncoder --delay-class-initialization-to-runtime=io.netty.handler.codec.http2.Http2CodecUtil --delay-class-initialization-to-runtime=io.netty.handler.codec.http2.DefaultHttp2FrameWriter --delay-class-initialization-to-runtime=io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder -H:+ReportUnsupportedElementsAtRuntime -H:+ReportExceptionStackTraces -Dfile.encoding=UTF-8 -jar target/vertx-graalvm-0.0.1-SNAPSHOT.jar
+# Vertx3 Native
 
-native-image --native-image-info --verbose --no-server --allow-incomplete-classpath --initialize-at-build-time=ch.qos.logback.classic.Logger -Dio.netty.noUnsafe=true -H:Name=vertx-graalvm -H:ReflectionConfigurationFiles=./reflectconfigs/netty.json -H:+ReportUnsupportedElementsAtRuntime -Dfile.encoding=UTF-8 -jar target/vertx-graalvm-0.0.1-SNAPSHOT.jar
+## 构建原生应用
 
-native-image --no-fallback --allow-incomplete-classpath --initialize-at-run-time=io.netty.handler.ssl.util.ThreadLocalInsecureRandom --initialize-at-build-time=ch.qos.logback.classic.Logger --trace-class-initialization=ch.qos.logback.core.status.InfoStatus,ch.qos.logback.classic.spi.PackagingDataCalculator,ch.qos.logback.core.status.StatusBase,ch.qos.logback.classic.Level,ch.qos.logback.core.spi.AppenderAttachableImpl  -H:Name=vertx-graalvm -H:ReflectionConfigurationFiles=./reflectconfigs/netty.json -H:+ReportUnsupportedElementsAtRuntime -H:+ReportExceptionStackTraces -Dfile.encoding=UTF-8 -jar target/vertx-graalvm-full.jar
+mvn -Pnative package
 
-native-image --verbose --no-server --allow-incomplete-classpath --initialize-at-run-time=io.netty.handler.ssl.util.ThreadLocalInsecureRandom --initialize-at-run-time=io.netty.resolver.dns.DnsNameResolver --initialize-at-run-time=io.netty.resolver.HostsFileEntriesResolver --initialize-at-run-time=io.netty.resolver.dns.DefaultDnsServerAddressStreamProvider --initialize-at-run-time=io.netty.handler.ssl.ReferenceCountedOpenSslEngine --trace-object-instantiation=java.net.Inet4Address --delay-class-initialization-to-runtime=io.netty.handler.codec.http.HttpObjectEncoder --delay-class-initialization-to-runtime=io.netty.handler.codec.http2.Http2CodecUtil --delay-class-initialization-to-runtime=io.netty.handler.codec.http2.DefaultHttp2FrameWriter  --initialize-at-run-time=io.netty.internal.tcnative.SSL --delay-class-initialization-to-runtime=io.netty.handler.codec.http.websocketx.WebSocket00FrameEncoder  -Dio.netty.noUnsafe=true  -H:Class=com.abvert.web.VertxHttpServer -H:Name=vertx-graalvm -H:+ReportUnsupportedElementsAtRuntime -H:+ReportExceptionStackTraces -Dfile.encoding=UTF-8 -jar target/vertx-graalvm-full.jar
+运行
+```
+./target/vertx-graalvm-full
+```
 
