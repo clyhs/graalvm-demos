@@ -22,28 +22,65 @@ import io.vertx.ext.web.Router;
 public class MainVerticle extends AbstractVerticle{
 	
 	private HttpServer httpServer;
-	
+
+	/* (non-Javadoc)
+	 * @see io.vertx.core.AbstractVerticle#start(io.vertx.core.Promise)
+	 */
 	@Override
-	public void start(Future<Void> startFuture) throws Exception {
-		HttpServerOptions options = new HttpServerOptions().setIdleTimeout(10000)
-				.setIdleTimeoutUnit(TimeUnit.MILLISECONDS).setTcpKeepAlive(true);
+	public void start(Promise<Void> startPromise) throws Exception {
+		// TODO Auto-generated method stub
+		//super.start(startPromise);
+		
+		HttpServerOptions options = new HttpServerOptions()
+                .setIdleTimeout(10000)
+                .setIdleTimeoutUnit(TimeUnit.MILLISECONDS)
+                .setTcpKeepAlive(true);
 
-		httpServer = vertx.createHttpServer(options);
+        httpServer = vertx.createHttpServer(options);
 
+        //
 		Router router = Router.router(vertx);
 		
 		router.route("/hello").handler(rc -> {
 			//log.info("Got hello request");
 			rc.response().end("World");
-		});
-		
-		httpServer.requestHandler(router).listen(8080, asyncResult -> {
-			if (asyncResult.failed()) {
-				System.out.println("start server failed! " + asyncResult.cause());
-			} else {
-				System.out.println("start server success!");
-			}
-		});
+		});        
+
+		httpServer.requestHandler(router).listen(8080,"127.0.0.1",res -> {
+            if (res.succeeded()) {
+            	System.out.println("start server success!");
+                startPromise.complete();
+            } else {
+            	System.out.println("start server failed! " + res.cause());
+                startPromise.fail(res.cause());
+            }
+        });
+	
 	}
+	
+	
+//	3.8.2
+//	@Override
+//	public void start(Future<void> startFuture) throws Exception {
+//		HttpServerOptions options = new HttpServerOptions().setIdleTimeout(10000)
+//				.setIdleTimeoutUnit(TimeUnit.MILLISECONDS).setTcpKeepAlive(true);
+//
+//		httpServer = vertx.createHttpServer(options);
+//
+//		Router router = Router.router(vertx);
+//		
+//		router.route("/hello").handler(rc -> {
+//			//log.info("Got hello request");
+//			rc.response().end("World");
+//		});
+//		
+//		httpServer.requestHandler(router).listen(8080, asyncResult -> {
+//			if (asyncResult.failed()) {
+//				System.out.println("start server failed! " + asyncResult.cause());
+//			} else {
+//				System.out.println("start server success!");
+//			}
+//		});
+//	}
 
 }
