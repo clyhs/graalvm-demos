@@ -13,8 +13,9 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<vertx.version>3.8.1</vertx.version>
-		<java.version>11</java.version>
+		<vertx.version>3.8.2</vertx.version>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -23,19 +24,12 @@
 			<artifactId>vertx-web</artifactId>
 			<version>${vertx.version}</version>
 		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<version>1.7.25</version>
-		</dependency>-->
+		<!-- <dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> 
+			<version>1.1.2</version> </dependency> <dependency> <groupId>org.slf4j</groupId> 
+			<artifactId>log4j-over-slf4j</artifactId> <version>1.7.25</version> </dependency> -->
 		<!-- Add tcnative to avoid error during native image generation: Caused 
 			by: java.lang.NoClassDefFoundError: io/netty/handler/ssl/ReferenceCountedOpenSslServerContext$OpenSslSniHostnameMatcher -->
+		<!-- -->
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-tcnative</artifactId>
@@ -70,6 +64,7 @@
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
+							<addClasspath>true</addClasspath>
 							<mainClass>com.abvert.web.VertxHttpServer</mainClass>
 						</manifest>
 					</archive>
@@ -85,6 +80,7 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>3.1.0</version>
 				<executions>
@@ -103,6 +99,40 @@
 					<release>11</release>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>io.reactiverse</groupId>
+				<artifactId>vertx-maven-plugin</artifactId>
+				<version>1.0.22</version>
+				<executions>
+					<execution>
+						<id>vmp</id>
+						<goals>
+							<goal>initialize</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<redeploy>true</redeploy>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.graalvm.nativeimage</groupId>
+				<artifactId>native-image-maven-plugin</artifactId>
+				<version>19.3.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>native-image</goal>
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<imageName>${project.artifactId}-full</imageName>
+					<mainClass>com.abvert.web.VertxHttpServer</mainClass>
+					<buildArgs>--no-server --allow-incomplete-classpath --no-fallback</buildArgs>
+				</configuration>
+			</plugin>
 			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
 				<version>3.1.1</version> <executions> <execution> <phase>package</phase> 
 				<goals> <goal>shade</goal> </goals> <configuration> <transformers> <transformer 
@@ -111,4 +141,8 @@
 				</configuration> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
+
+
+
+
 </project>
